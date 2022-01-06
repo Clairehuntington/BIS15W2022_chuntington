@@ -143,7 +143,7 @@ mean(new_vector)
 3. How do you interpret this result? What does this mean about NAs?  
 This shows us when we have an unknown variable in a vector, that this will affect the mean calculation and it cannot accurately identify the mean since this unknown value will influence it. 
 4. Recalculate the mean using the following code chunk. Why is the useful?  
-```{r}
+```{r} 
 mean(new_vector, na.rm=T) #na.rm removes the NA values in the vector
 ```
 
