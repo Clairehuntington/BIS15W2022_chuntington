@@ -49,7 +49,7 @@ names(elephants)
 elephants <- rename(elephants, age= Age, height= Height, sex=Sex)
 ```
 ```{r}
-as.factor("sex")
+sex <- as.factor("sex")
 ```
 5. (2 points) How many male and female elephants are represented in the data?
 ```{r}
@@ -108,20 +108,47 @@ Reference: Koerner SE, Poulsen JR, Blanchard EJ, Okouyi J, Clark CJ. Vertebrate 
 ```{r}
 gabon_data <- readr::read_csv("data/IvindoData_DryadVersion.csv")
 ```
+
 ```{r}
-as.factor("HuntCat")
-as.factor("LandUse")
+gabon_data$hunt_cat <- as.factor("HuntCat")
+gabon_data$land_use <- as.factor("LandUse")
 ```
 10. (4 points) For the transects with high and moderate hunting intensity, how does the average diversity of birds and mammals compare?
 ```{r}
-gabon_data
-filter(gabon_data$HuntCat== Moderate)
+lapply(gabon_data, class)
+na.omit(gabon_data)
 ```
-11. (4 points) One of the conclusions in the study is that the relative abundance of animals drops off the closer you get to a village. Let's try to reconstruct this (without the statistics). How does the relative abundance (RA) of apes, birds, elephants, monkeys, rodents, and ungulates compare between sites that are less than 3km from a village to sites that are greater than 25km from a village? The variable `Distance` measures the distance of the transect from the nearest village. Hint: try using the `across` operator.  
 ```{r}
+gabon_data%>%
+  filter(HuntCat=="High")%>%
+  select(Diversity_BirdSpecies, Diversity_MammalSpecies)%>%
+  summarise(avg_mammal_div= mean("Diversity_MammalSpecies"), avg_bird_div= mean("Diversity_BirdSpecies"))
 
 ```
+```{r}
+names(gabon_data)
+glimpse(gabon_data)
+```
+
+11. (4 points) One of the conclusions in the study is that the relative abundance of animals drops off the closer you get to a village. Let's try to reconstruct this (without the statistics). How does the relative abundance (RA) of apes, birds, elephants, monkeys, rodents, and ungulates compare between sites that are less than 3km from a village to sites that are greater than 25km from a village? The variable `Distance` measures the distance of the transect from the nearest village. Hint: try using the `across` operator.  
+
+```{r}
+gabon_data%>%
+  filter(Distance<3)%>%
+  summarise(across(c("RA_Apes","RA_Birds", "RA_Elephant", "RA_Monkeys", "RA_Rodent", "RA_Ungulate")))
+```
+
+```{r}
+gabon_data%>%
+  filter(Distance>25)%>%
+  summarise(across(c("RA_Apes","RA_Birds", "RA_Elephant", "RA_Monkeys", "RA_Rodent", "RA_Ungulate")))
+```
+After looking at these data tables I made, it seems there are two transects that are less than 3 km away and one transect that is over 25km away. The relative abundance of apes is much higher in the greater than 25km group. For birds, the relative abundance is much higher when less than 3km away from a village. The elephant relative abundance was quite low for both with a value of 0 greater than 25km away and a high of 0.29 when less than 3 km away. RA of monkeys was higher when greater than 25 km away at a value of 54.12 and when less than 3 km away it was 9.09 and 25.58. RA of rodents was higher when less than 3km away from a village. Lastly, the RA of ungulates was much higher when more than 25km away from a village.
+
 12. (4 points) Based on your interest, do one exploratory analysis on the `gabon` data of your choice. This analysis needs to include a minimum of two functions in `dplyr.`
 ```{r}
-
+gabon_data
+gabon_data%>%
+  summarise(mammal_evenness=mean(Evenness_MammalSpecies), bird_evenness=mean(Evenness_BirdSpecies))
 ```
+Here, I wanted to compare the evenness of bird species as compared to the evenness of mammal species. We can see that the evenness of mammals is slightly higher by a value of 0.03 more than the bird evenness value. 
