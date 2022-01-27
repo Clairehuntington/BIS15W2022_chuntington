@@ -29,33 +29,56 @@ library(tidyverse)
 Wikipedia's definition of [data science](https://en.wikipedia.org/wiki/Data_science): "Data science is an interdisciplinary field that uses scientific methods, processes, algorithms and systems to extract knowledge and insights from noisy, structured and unstructured data, and apply knowledge and actionable insights from data across a broad range of application domains."  
 
 1. (2 points) Consider the definition of data science above. Although we are only part-way through the quarter, what specific elements of data science do you feel we have practiced? Provide at least one specific example.  
-In this definition fo data science, it mentions working with large data set and being able to extract data and knowledge from it. I feel like I have definitely done this in our class so far. For example, in our homework assignments we seem to work with pretty large data sets and using functions like dim() or colname() we are able to identify and learn much more about what exactly we are working with. 
+In this definition for data science, it mentions working with large data sets and being able to extract data and knowledge from it. I feel like I have definitely practiced this throughout our class so far. For example, in our homework assignments we seem to work with pretty large data sets and using functions like dim() or colname() we are able to identify and learn much more about what exactly we are working with. We also use functions like group_by, filter, or summarize to sort through the data and create new data frames as well. 
 
 2. (2 points) What is the most helpful or interesting thing you have learned so far in BIS 15L? What is something that you think needs more work or practice?  
-All of this is very very new to me and has definitely been a journey where I have learned so much. I am a lot less scared than I was at the beginning and feel like the world of coding is a lot more approachable to me than it used to be. One thing that was very useful that I learned so far is being able to rename some of our items in data frames or data sets we work with. I think the ability to do this and rename objects is and will be useful in the future as well. Something that I personally feel I need more practice with is keeping everything neat, clean, and updated. I often find myself stuck on homework assignments and frustrated that I cannot move on when it is often due to a small mistake or something I missed previously. 
+All of this is very very new to me and has definitely been a journey where I have learned so much. I am a lot less scared than I was at the beginning and feel like the world of coding is a lot more approachable to me than it used to be. One thing that was very useful that I learned so far is being able to rename some of our items in data frames or data sets we work with. I think the ability to do this and rename objects is and will be useful in the future as well. Something that I personally feel I need more practice with is keeping everything neat, clean, and updated. I often find myself stuck on homework assignments and frustrated that I cannot move on when it is often due to a small mistake or something I missed previously. It has definitely proved important to keep things very neat and organized which I think I can improve on as well. 
 
 In the midterm 1 folder there is a second folder called `data`. Inside the `data` folder, there is a .csv file called `ElephantsMF`. These data are from Phyllis Lee, Stirling University, and are related to Lee, P., et al. (2013), "Enduring consequences of early experiences: 40-year effects on survival and success among African elephants (Loxodonta africana)," Biology Letters, 9: 20130011. [kaggle](https://www.kaggle.com/mostafaelseidy/elephantsmf).  
 
 3. (2 points) Please load these data as a new object called `elephants`. Use the function(s) of your choice to get an idea of the structure of the data. Be sure to show the class of each variable.
+I loaded the data using readr::read_csv and used functions glimpse, colnames, and class to learn more about the data. 
 ```{r}
 elephants <- readr::read_csv("data/ElephantsMF.csv")
 ```
 
+```{r}
+glimpse(elephants)
+```
+
+```{r}
+colnames(elephants)
+```
+
+```{r}
+class(elephants$Age)
+class(elephants$Height)
+class(elephants$Sex)
+```
+
 4. (2 points) Change the names of the variables to lower case and change the class of the variable `sex` to a factor.
+
 ```{r}
 names(elephants)
 ```
 ```{r}
 elephants <- rename(elephants, age= Age, height= Height, sex=Sex)
 ```
+
 ```{r}
-sex <- as.factor("sex")
+elephants$sex<-as.factor(elephants$sex)
 ```
+
+```{r}
+glimpse(elephants)
+```
+
 5. (2 points) How many male and female elephants are represented in the data?
 ```{r}
-elephants %>% filter(sex== "M")
+elephants%>% 
+  filter(sex== "M") 
 ```
-By filtering the data in elephants for the sex to only be male, it gave us a total of 138 rows meaning there are 138 males in this data set. I also double checked with the code below where it confirms 138 males.
+By filtering the data in elephants for the sex to only be male, it gave us a total of 138 rows meaning there are 138 males in this data set. I also double checked with the code below where it confirms 138 males and there are 150 females present. 
 
 ```{r}
 table(elephants$sex)
@@ -68,14 +91,20 @@ The average age of all the elephants in the data is about 10.97
 
 7. (2 points) How does the average age and height of elephants compare by sex?
 ```{r}
-male.elephants <- elephants %>% filter(sex== "M")
-female.elephants <- elephants %>% filter(sex== "F")
-mean(female.elephants$age)
-mean(male.elephants$age)
+male.elephants<- elephants%>% filter(sex=="M")
 ```
+
 ```{r}
-mean(male.elephants$height)
-mean(female.elephants$height)
+female.elephants<- elephants%>% filter(sex=="F")
+```
+
+
+```{r}
+summarise(elephants, female_age=mean(female.elephants$age), male_age= mean(male.elephants$age))
+```
+
+```{r}
+summarise(elephants, female_height=mean(female.elephants$height), male_height=mean(male.elephants$height))
 ```
 For age, it seems like the female elephants live longer than the male elephants by about four years. When looking at the height, the female elephants are also taller than the male elephants. 
 
@@ -110,25 +139,20 @@ gabon_data <- readr::read_csv("data/IvindoData_DryadVersion.csv")
 ```
 
 ```{r}
-gabon_data$hunt_cat <- as.factor("HuntCat")
-gabon_data$land_use <- as.factor("LandUse")
-```
-10. (4 points) For the transects with high and moderate hunting intensity, how does the average diversity of birds and mammals compare?
-```{r}
-lapply(gabon_data, class)
-na.omit(gabon_data)
-```
-```{r}
-gabon_data%>%
-  filter(HuntCat=="High")%>%
-  select(Diversity_BirdSpecies, Diversity_MammalSpecies)%>%
-  summarise(avg_mammal_div= mean("Diversity_MammalSpecies"), avg_bird_div= mean("Diversity_BirdSpecies"))
-
-```
-```{r}
-names(gabon_data)
+gabon_data$HuntCat <- as.factor(gabon_data$HuntCat)
+gabon_data$LandUse <- as.factor(gabon_data$LandUse)
 glimpse(gabon_data)
 ```
+10. (4 points) For the transects with high and moderate hunting intensity, how does the average diversity of birds and mammals compare?
+
+```{r}
+gabon_data %>%
+  filter(HuntCat=="High" | HuntCat=="Moderate") %>% 
+   select(TransectID, Diversity_BirdSpecies, Diversity_MammalSpecies)%>% 
+  summarise(avg_bird_diversity=mean(Diversity_BirdSpecies), avg_mammal_diversity=mean(Diversity_MammalSpecies))
+```
+Here we can see that the average bird diversity amongst moderate and high hunting intensity is slightly lower than the average mammal diversity of about 0.07 units. 
+
 
 11. (4 points) One of the conclusions in the study is that the relative abundance of animals drops off the closer you get to a village. Let's try to reconstruct this (without the statistics). How does the relative abundance (RA) of apes, birds, elephants, monkeys, rodents, and ungulates compare between sites that are less than 3km from a village to sites that are greater than 25km from a village? The variable `Distance` measures the distance of the transect from the nearest village. Hint: try using the `across` operator.  
 
@@ -146,9 +170,10 @@ gabon_data%>%
 After looking at these data tables I made, it seems there are two transects that are less than 3 km away and one transect that is over 25km away. The relative abundance of apes is much higher in the greater than 25km group. For birds, the relative abundance is much higher when less than 3km away from a village. The elephant relative abundance was quite low for both with a value of 0 greater than 25km away and a high of 0.29 when less than 3 km away. RA of monkeys was higher when greater than 25 km away at a value of 54.12 and when less than 3 km away it was 9.09 and 25.58. RA of rodents was higher when less than 3km away from a village. Lastly, the RA of ungulates was much higher when more than 25km away from a village.
 
 12. (4 points) Based on your interest, do one exploratory analysis on the `gabon` data of your choice. This analysis needs to include a minimum of two functions in `dplyr.`
+
 ```{r}
-gabon_data
 gabon_data%>%
-  summarise(mammal_evenness=mean(Evenness_MammalSpecies), bird_evenness=mean(Evenness_BirdSpecies))
+  filter(LandUse=="Park")%>%
+  summarise(across(c("Evenness_MammalSpecies", "Evenness_BirdSpecies")))
 ```
-Here, I wanted to compare the evenness of bird species as compared to the evenness of mammal species. We can see that the evenness of mammals is slightly higher by a value of 0.03 more than the bird evenness value. 
+Here, I wanted look at comparing the evenness of mammal species and bird species spefically filtering for when the land use was for parks.  
