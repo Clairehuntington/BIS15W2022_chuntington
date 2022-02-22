@@ -33,6 +33,7 @@ Please make sure that you have 1-2 data sets to share with your group member dur
 #install.packages("RColorBrewer")
 #install.packages("paletteer")
 #install.packages("ggthemes")
+install.packages("gtools")
 ```
 
 ## Load the libraries

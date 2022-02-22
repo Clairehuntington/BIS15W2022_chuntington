@@ -121,8 +121,7 @@ gapminder %>%
 gapminder %>%
   filter(continent == "Americas") %>%
   select(country, year, lifeExp) %>%
-  ggplot(aes(x = year, y = lifeExp)) +geom_line() +
-facet_grid(~year)
+  ggplot(aes(x = year, y = lifeExp)) +geom_line() + facet_grid()
 ```
 ```
 
