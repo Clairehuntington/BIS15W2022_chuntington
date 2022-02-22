@@ -1184,7 +1184,7 @@ kuwait
 
 ```r
 kuwait%>%
-  ggplot(aes(x=as.factor(year),y=life_expect, group=country, color=country))+geom_point()+geom_line()+labs(title="Kuwait Life Expectancy from 1920 to 2020", x="Year", y="Life Expectancy")
+  ggplot(aes(x=as.numeric(year),y=life_expect, group=country, color=country))+geom_point()+geom_line()+labs(title="Kuwait Life Expectancy from 1920 to 2020", x="Year", y="Life Expectancy")
 ```
 
 ![](midterm_2_files/figure-html/unnamed-chunk-19-1.png)<!-- -->
@@ -1219,7 +1219,7 @@ Here we can see that the top contries in the past 100 years for population growt
 ```r
 population_long %>%
   filter(year<2021, year>1919, country == "India"|country == "China"|country == "Indonesia"|country == "United States"|country == "Pakistan")%>%
-  ggplot(aes(x=year, y=population_tot, color=country)) + geom_point() + facet_wrap(~country)+
+  ggplot(aes(x=as.numeric(year), y=population_tot, color=country)) + geom_point() + facet_wrap(~country)+
   labs(title = "Top 5 Countries for Population Growth", x = "Year", y = "Population")
 ```
 
@@ -1256,7 +1256,7 @@ income_per%>%
 ```r
 income_long%>% 
    filter(country %in% c("Qatar", "Luxembourg", "Singapore", "Brunei", "Ireland"),between(year,1920,2020))%>%
-  ggplot(aes(x=year, y=income_per_person,  group=country,color=country))+geom_point()+geom_line()+facet_wrap(~country) + labs(title="Top 5 Countries Income from 1920 until 2020", x="Year", y="GDP")
+  ggplot(aes(x=as.numeric(year), y=income_per_person,  group=country,color=country))+geom_point()+geom_line()+facet_wrap(~country) + labs(title="Top 5 Countries Income from 1920 until 2020", x="Year", y="GDP")
 ```
 
 ![](midterm_2_files/figure-html/unnamed-chunk-23-1.png)<!-- -->
