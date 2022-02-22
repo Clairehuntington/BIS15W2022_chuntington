@@ -131,7 +131,7 @@ kuwait
 
 ```{r}
 kuwait%>%
-  ggplot(aes(x=as.factor(year),y=life_expect, group=country, color=country))+geom_point()+geom_line()+labs(title="Kuwait Life Expectancy from 1920 to 2020", x="Year", y="Life Expectancy")
+  ggplot(aes(x=as.numeric(year),y=life_expect, group=country, color=country))+geom_point()+geom_line()+labs(title="Kuwait Life Expectancy from 1920 to 2020", x="Year", y="Life Expectancy")
 ```
 Here we can see there is a huge jump in life expectancy after around the years 1940-1950. When researching, I found that in the 1930s, Kuwait started getting into the petroleum industry. This brought lots of wealth and economic growth which allowed their life expectancy to grow much longer. 
 
@@ -151,7 +151,7 @@ Here we can see that the top contries in the past 100 years for population growt
 ```{r}
 population_long %>%
   filter(year<2021, year>1919, country == "India"|country == "China"|country == "Indonesia"|country == "United States"|country == "Pakistan")%>%
-  ggplot(aes(x=year, y=population_tot, color=country)) + geom_point() + facet_wrap(~country)+
+  ggplot(aes(x=as.numeric(year), y=population_tot, color=country)) + geom_point() + facet_wrap(~country)+
   labs(title = "Top 5 Countries for Population Growth", x = "Year", y = "Population")
 ```
 It seems like both China and India have exponential growth for population. 
@@ -173,7 +173,7 @@ income_per%>%
 ```{r}
 income_long%>% 
    filter(country %in% c("Qatar", "Luxembourg", "Singapore", "Brunei", "Ireland"),between(year,1920,2020))%>%
-  ggplot(aes(x=year, y=income_per_person,  group=country,color=country))+geom_point()+geom_line()+facet_wrap(~country) + labs(title="Top 5 Countries Income from 1920 until 2020", x="Year", y="GDP")
+  ggplot(aes(x=as.numeric(year), y=income_per_person,  group=country,color=country))+geom_point()+geom_line()+facet_wrap(~country) + labs(title="Top 5 Countries Income from 1920 until 2020", x="Year", y="GDP")
 ```
 During the 1980s, we see a large drop especially with Qatar and Brunei for GDP per capita in these graphs. After doing some research, it seems like this was largely due to the petroleum market. For Brunei, there was a huge peak around 1970 and then declines dramatically in the 1980s. I found that the decrease was due to low petroleum prices as well as production cuts in Brunei. For Qatar, in the 1980s, they had a large decrease due to the Organization of Petroleum Exporting Countries that put quotas on their oil production and overall lower prices. 
 
