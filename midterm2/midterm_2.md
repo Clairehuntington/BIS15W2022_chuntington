@@ -1310,5 +1310,5 @@ gapminder_join%>%
 ```
 
 ![](midterm_2_files/figure-html/unnamed-chunk-26-1.png)<!-- -->
-Here I chose to compare life expectancy and population for the five countries that I found before had the top GDP per capita. 
+For this question, I chose to compare life expectancy and population for the five countries that I found before had the top GDP per capita. 
 

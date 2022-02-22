@@ -203,5 +203,5 @@ gapminder_join%>%
   filter(country %in% c("Qatar", "Luxembourg", "Singapore", "Brunei", "Ireland"))%>%
   ggplot(aes(x=population_tot, y=life_expect, group=country, color=country)) + geom_point()+facet_wrap(~country)+ labs(title="Life Expectancy vs Population for Top 5 GDP per Capita Countries", x="Population", y="Life Expectancy")
 ```
-Here I chose to compare life expectancy and population for the five countries that I found before had the top GDP per capita. 
+For this question, I chose to compare life expectancy and population for the five countries that I found before had the top GDP per capita. 
 
