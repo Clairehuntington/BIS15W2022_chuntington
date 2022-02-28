@@ -44,6 +44,11 @@ homerange <- readr::read_csv("data/Tamburelloetal_HomeRangeDatabase.csv")
 
 Here is the app so you can copy/ paste.  
 ```{r, eval=F, echo=T}
+library("shiny")
+library("tidyverse")
+
+homerange <- readr::read_csv("data/Tamburelloetal_HomeRangeDatabase.csv")
+
 ui <- fluidPage(    
   
   titlePanel("Log 10 Homerange by Taxon"), # give the page a title
@@ -126,7 +131,7 @@ ui <- fluidPage(
               selected = "bill_length_mm"),
     selectInput("y", "Select Y Variable", choices = c("bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g"),
               selected = "bill_depth_mm"),
-    sliderInput("pointsize", "Select the Point Size", min = 0.5, max = 3, value = 1, step = 0.5),
+    sliderInput("pointsize", "Select the Point Size", min = 0.5, max = 50, value = 1, step = 0.5),
     plotOutput("plot", width = "500px", height = "400px")
 )
 
@@ -145,7 +150,7 @@ shinyApp(ui, server)
 ## ui Layout with `shinydashboard`  
 We now have a functional app, but the layout doesn't look very nice. We can change that with many different methods, but shiny dashboards are simple to use and offer a lot of functionality for making apps look professional quickly. First we need to install the `shinydashboard` package.  
 ```{r}
-#install.packages("shinydashboard")
+install.packages("shinydashboard")
 library(shinydashboard)
 ```
 
@@ -153,6 +158,7 @@ When working with any package on shiny ui appearance, it's important to know how
 
 We won't use `fluidPage()` with `shinydashboard` but rather `dashboardPage()`. A shiny dashboard contains a minimum of a header, a sidebar, and a body. The `dashboardPage()` still contains the bootstrap grid.  
 ```{r}
+library(shiny)
 ui <- dashboardPage(
   dashboardHeader(),
   dashboardSidebar(),
@@ -294,6 +300,36 @@ wolves %>%
   geom_bar()+
   facet_wrap(~pop)
 ```
+```{r, eval=F, echo=T}
+ui <- dashboardPage(
+  dashboardHeader(title = "Wolf Population"),
+  dashboardSidebar(disable = T),
+  dashboardBody(
+  fluidRow(
+  box(title = "Plot Options", width = 3,
+  selectInput("x", "Select X Variable", choices = c("AK.PEN", "BAN.JAS", "BC", "DENALI", "ELLES", "GTNP", "INT.AK", "MEXICAN", "MI", "MT", "N.NWT", "ONT", "SE.AK", "SNF", "SS.NWT", "YNP", "YUCH"), 
+              selected = "bill_length_mm"),
+   sliderInput("pointsize", "Select the Point Size", min = 1, max = 5, value = 2, step = 0.5)
+  ), # close the first box
+  box(title = "WOLF POPULATION", width = 7,
+  plotOutput("plot", width = "600px", height = "500px")
+  )
+  ) 
+  ) 
+) 
+
+server <- function(input, output, session) { 
+  output$plot <- renderPlot({
+ wolves %>% 
+  filter(sex!="NA") %>% 
+  filter(pop==input$x)
+  ggplot(aes_string(x=sex)+ geom_bar()
+  })
+  session$onSessionEnded(stopApp)
+  }
+shinyApp(ui, server)
+```
+
 
 ## That's it, let's take a break!   
 

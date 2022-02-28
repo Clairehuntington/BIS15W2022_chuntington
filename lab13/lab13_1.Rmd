@@ -78,6 +78,12 @@ Let's get the names of the `palmerpenguins` data frame and add them as a `select
 names(penguins)
 ```
 
+
+```{r}
+penguins %>% 
+  ggplot(aes(x=flipper_length_mm, y=body_mass_g)) + geom_point()
+```
+
 We won't use the name `species` because that will be the `ggplot` grouping variable. Copy and paste the code below and run the app to see our new input. 
 ```{r, eval=F, echo=T}
 ui <- fluidPage(
@@ -176,6 +182,26 @@ homerange %>%
 ```
 
 2. Build a shiny app that produces a barplot that explores `locomotion` type with a fill reaction for the variables `trophic.guild` and `thermoregulation`.  
+
+```{r}
+library(shiny)
+
+ui <- fluidPage(selectInput("x", "select fill variable", choices=c("trophic.guild", "thermoregulation"), selected = "trophic.guild"),
+  plotOutput("plot", width = "500px", height = "400px")
+)
+
+server <- function(input, output) {
+  output$plot <- renderPlot({
+    ggplot(data=homerange, aes_string(x = "locomotion", fill=input$x)) + 
+    geom_bar() + 
+    theme_light(base_size = 18)
+  })
+}
+
+shinyApp(ui, server)
+```
+
+
 ```{r}
 library(shiny)
 
