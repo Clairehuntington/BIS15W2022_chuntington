@@ -1,0 +1,33 @@
+---
+title: "Project"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##Library
+```{r}
+library(tidyverse)
+library(janitor)
+library(lubridate)
+```
+
+##pH Data
+```{r}
+files <- list.files(path="data", pattern = ".csv", full.names = TRUE)
+files
+```
+
+```{r}
+files_list <- lapply(files, read_csv)
+files_list
+```
+
+##Project Code
+```{r}
+ph
+```
+##Questions
+1. 
