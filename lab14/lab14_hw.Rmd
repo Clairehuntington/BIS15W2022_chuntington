@@ -1,10 +1,10 @@
 ---
 title: "Lab 14 HW"
-output: 
-  html_document: 
-    keep_md: yes
-author: "Claire Huntimgtom
+author: "Claire Huntington
 date: '2022-02-28'
+output:
+  html_document:
+    keep_md:yes
 ---
 
 ```{r}
