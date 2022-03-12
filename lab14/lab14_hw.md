@@ -1,12 +1,22 @@
 ---
-title: "Lab 14 HW"
 output: 
   html_document: 
     keep_md: yes
-author: "your name here"
+---
+title: "Lab 14 HW"
+author: "Claire Huntington"
 date: '2022-02-28'
+output:
+  html_document: 
+    theme: spacelab
+    keep_md: yes
 ---
 
+
+```r
+#remove.packages("yaml")
+#install.packages("yaml")
+```
 
 ### Load the Libraries
 
@@ -112,21 +122,76 @@ beachbugs_long <- readr::read_csv("data/beachbugs_long.csv")
 Clean up the column names (no capitals, not spaces) of `superhero_info`, then use 2 functions to remind yourself of structure of the `superhero_info` data set.
 
 
+```r
+superhero_info <- clean_names(superhero_info)
+```
+
+
+```r
+superhero_info
+```
+
+```
+## # A tibble: 734 × 10
+##    name  gender eye_color race  hair_color height publisher skin_color alignment
+##    <chr> <chr>  <chr>     <chr> <chr>       <dbl> <chr>     <chr>      <chr>    
+##  1 A-Bo… Male   yellow    Human No Hair       203 Marvel C… <NA>       good     
+##  2 Abe … Male   blue      Icth… No Hair       191 Dark Hor… blue       good     
+##  3 Abin… Male   blue      Unga… No Hair       185 DC Comics red        good     
+##  4 Abom… Male   green     Huma… No Hair       203 Marvel C… <NA>       bad      
+##  5 Abra… Male   blue      Cosm… Black          NA Marvel C… <NA>       bad      
+##  6 Abso… Male   blue      Human No Hair       193 Marvel C… <NA>       bad      
+##  7 Adam… Male   blue      <NA>  Blond          NA NBC - He… <NA>       good     
+##  8 Adam… Male   blue      Human Blond         185 DC Comics <NA>       good     
+##  9 Agen… Female blue      <NA>  Blond         173 Marvel C… <NA>       good     
+## 10 Agen… Male   brown     Human Brown         178 Marvel C… <NA>       good     
+## # … with 724 more rows, and 1 more variable: weight <dbl>
+```
 
 ### 2.
 Are bad guys bigger? Make box-plots of weight by `alignment` (alignment on the x-axis).
 
+```r
+superhero_info %>% 
+  ggplot(aes(x = alignment, y = weight, fill = alignment)) + geom_boxplot(na.rm = TRUE)+
+  coord_flip()
+```
+
+![](lab14_hw_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
 
 ### 3. 
 Now, make a violin plot of weight by `alignment` (alignment on the x-axis). Add some color!
   What information can you observe in the violin plot that was not visible in the boxplot?
 
+```r
+superhero_info %>% 
+  ggplot(aes(x = alignment, y = weight, fill = alignment)) +
+  geom_violin()
+```
+
+```
+## Warning: Removed 239 rows containing non-finite values (stat_ydensity).
+```
+
+![](lab14_hw_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
 
 
 
 ### 4. 
 Use `alpha = .5` in `geom_boxplot()` and `geom_violin()` to layer both plots on top of one another. What does this tell you about the distribution of weight in "`bad`" guys?
 
+```r
+superhero_info %>% 
+  ggplot(aes(x = alignment, y = weight, fill = alignment)) +
+  geom_boxplot(color = "grey", na.rm = TRUE)+
+  geom_violin()
+```
+
+```
+## Warning: Removed 239 rows containing non-finite values (stat_ydensity).
+```
+
+![](lab14_hw_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
 
 ### 5. 
 Box plots are great for showing how the distribution of a numeric variable (e.g. weight) varies among a categorical variable (e.g. alignment).
@@ -135,6 +200,17 @@ Box plots are great for showing how the distribution of a numeric variable (e.g.
   What is your categorical variable?
 
 
+```r
+superhero_info %>% 
+  ggplot(aes(x=gender, y=weight, fill=gender))+
+  geom_violin()
+```
+
+```
+## Warning: Removed 239 rows containing non-finite values (stat_ydensity).
+```
+
+![](lab14_hw_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
 
 ### 6. 
 Remind yourself what `beachbugs` looks like. Then generate a heatmap of buglevels by site and year. 
@@ -142,8 +218,31 @@ color it with `scale_fill_gradient(low="yellow", high="red")` or colors of your 
 (dont forget, `coord_flip()` is a quick way to improve the look of your plot if you dont like the default orientation)
 
 
+```r
+head(beachbugs_long)
+```
+
+```
+## # A tibble: 6 × 3
+##    year site               buglevels
+##   <dbl> <chr>                  <dbl>
+## 1  2013 Bondi Beach            32.2 
+## 2  2013 Bronte Beach           26.8 
+## 3  2013 Clovelly Beach          9.28
+## 4  2013 Coogee Beach           39.7 
+## 5  2013 Gordons Bay (East)     24.8 
+## 6  2013 Little Bay Beach      122.
+```
 
 
+```r
+beachbugs_long %>% 
+  ggplot(aes(x=site, y=year, fill=buglevels))+
+  geom_tile()+
+  scale_fill_gradient(low="yellow", high="red")
+```
+
+![](lab14_hw_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
 
 ### 7.  
 Use the provided code to normalize the beachbug data set. 
@@ -206,6 +305,14 @@ beachbugs_normalized
 ```
  
 
+```r
+beachbugs_normalized %>% 
+  ggplot(aes(x=site, y=year, fill=norm_buglevel))+
+  geom_tile()+
+  scale_fill_gradient(low="yellow", high="red")
+```
+
+![](lab14_hw_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
 
 ### 8.
 Let's make a venn diagram of `superhero_info`, from 4 questions:
@@ -220,23 +327,30 @@ Start by making the 4 vectors, then the list of vectors. The vector for alignmen
 ```r
 # evil
 
-#evil_vec <- superhero_info %>%
-#  filter(alignment == "bad")%>%
-#  pull(name)
+evil_vec <- superhero_info %>%
+  filter(alignment == "bad")%>%
+ pull(name)
 
 # red eyes
-
+red_eye_vec <- superhero_info %>%
+  filter(eye_color == "red")%>%
+  pull(name)
 
 # male
-
+male_vec <- superhero_info %>%
+  filter(gender == "male")%>%
+  pull(name)
 
 # bald
+bald_vec <- superhero_info %>%
+  filter(hair_color == "no hair")%>%
+  pull(name)
 ```
 
 Your list of vectors will look something like this:
 
 ```r
-# questions_list <- list(evil_vec, red_eye_vec, male_vec, bald_vec)
+ questions_list <- list(evil_vec, red_eye_vec, male_vec, bald_vec)
 ```
 
 ### 9. 
@@ -245,19 +359,45 @@ Let's make the venn diagram! use the code from lab as a reference.
 ```r
 # something like:
 # ggVennDiagram( list, category.names = c("name", "name", "name", "name"))
+
+evil_bald_men <- ggVennDiagram(questions_list, category.names = c("evil", "red eye", "male", "bald"))
+evil_bald_men
 ```
+
+![](lab14_hw_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
 
 
 ### 10. Choose one intersection of the venn diagram that is interesting to you. Use dplyr to find the names of the superheros in that intersection. 
 
 
+```r
+superhero_info%>%
+  filter(gender != "male")%>%
+  filter(alignment == "bad")%>%
+  filter(eye_color == "red") %>% 
+  select(name)
+```
+
+```
+## # A tibble: 22 × 1
+##    name        
+##    <chr>       
+##  1 Amazo       
+##  2 Apocalypse  
+##  3 Black Abbott
+##  4 Blackout    
+##  5 Darkseid    
+##  6 Demogoblin  
+##  7 Doomsday    
+##  8 Evilhawk    
+##  9 Killer Croc 
+## 10 Klaw        
+## # … with 12 more rows
+```
 
 
 
 ### 11. Make another venn diagram with the `superhero_info` data. What are your questions? ( At least 2!) 
-
-
-
 
 ### 12.
 What are some very common super powers? Lets make a word cloud with the `superhero_powers` data.
@@ -313,8 +453,6 @@ power_frequency
 ## 10 Danger Sense             30
 ## # … with 157 more rows
 ```
-
-
 
 ### 13.  
 Who are some very powerful supers? 
@@ -379,6 +517,15 @@ power_quantity
 
 
 
+```r
+power_quantity %>% 
+ggplot(aes(
+  label = hero_names,  size = sum_powers, color = hero_names )) +
+  geom_text_wordcloud() +
+  theme_classic()
+```
+
+![](lab14_hw_files/figure-html/unnamed-chunk-21-1.png)<!-- -->
 
 ## That's it! 🎉
 Thanks for coding with us all winter! 

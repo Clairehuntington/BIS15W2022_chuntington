@@ -1,10 +1,15 @@
 ---
+output: 
+  html_document: 
+    keep_md: yes
+---
 title: "Lab 14 HW"
-author: "Claire Huntington
+author: "Claire Huntington"
 date: '2022-02-28'
 output:
-  html_document:
-    keep_md:yes
+  html_document: 
+    theme: spacelab
+    keep_md: yes
 ---
 
 ```{r}
@@ -241,7 +246,7 @@ power_quantity
 
 
 
-```{r}
+```{r} 
 power_quantity %>% 
 ggplot(aes(
   label = hero_names,  size = sum_powers, color = hero_names )) +
